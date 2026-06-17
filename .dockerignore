@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+build
+dist
+.git
+.cursor
+.opencode
+ui-ux-pro-max-skill-2.5.0
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+.vercel

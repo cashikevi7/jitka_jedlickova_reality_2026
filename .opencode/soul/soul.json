@@ -1,0 +1,18 @@
+{
+  "specVersion": "0.4",
+  "name": "mamka-reality-web",
+  "displayName": "Mamka Reality Web",
+  "version": "1.0.0",
+  "description": "Soul pro osobní web realitní makléřky Jitky Jedličkové — Next.js 15 static export, rodinná realitní praxe.",
+  "license": "MIT",
+  "tags": ["nextjs", "real-estate", "static-site", "cursor"],
+  "compatibility": {
+    "frameworks": ["cursor", "openclaw", "windsurf"]
+  },
+  "files": {
+    "soul": "SOUL.md",
+    "identity": "IDENTITY.md",
+    "agents": "AGENTS.md",
+    "heartbeat": "HEARTBEAT.md"
+  }
+}

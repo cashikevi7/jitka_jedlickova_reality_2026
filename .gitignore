@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build / Next
+.next/
+out/
+build/
+dist/
+
+# Debug / logs
+*.log
+.cursor/debug-*.log
+
+# Env
+.env
+.env*.local
+
+# Lokální tooling / vnořené klony (necommitovat jako gitlink)
+openclaw/
+oh-my-openagent/
+
+# Cursor / IDE
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+node_modules
