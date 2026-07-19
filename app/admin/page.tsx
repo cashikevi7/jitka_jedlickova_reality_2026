@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { clearAdminSession } from "@/lib/admin-auth";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AdminHomePage() {
   const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  function logout() {
-    clearAdminSession();
+  async function logout() {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+    } catch {
+      // i při chybě přesměrujeme — cookie se smaže klidně i na serveru
+    }
     router.push("/admin/login/");
     router.refresh();
   }
@@ -20,9 +26,10 @@ export default function AdminHomePage() {
         <button
           type="button"
           onClick={logout}
-          className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-100"
+          disabled={loggingOut}
+          className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-100 disabled:opacity-50"
         >
-          Odhlásit se
+          {loggingOut ? "Odhlašování…" : "Odhlásit se"}
         </button>
       </div>
       <p className="mt-4 text-stone-600">

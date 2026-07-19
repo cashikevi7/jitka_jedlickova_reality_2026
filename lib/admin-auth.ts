@@ -1,50 +1,63 @@
-const STORAGE_KEY = "mamka_admin_session";
+import crypto from "crypto";
+
+// ─── Server-side utility (NEimportovat do client komponent) ───
+
 const SESSION_MS = 7 * 24 * 60 * 60 * 1000;
 
-export function getConfiguredAdminEmail(): string {
-  return (process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? "").trim();
+export function isAdminConfigured(): boolean {
+  const email = (process.env.ADMIN_EMAIL ?? "").trim();
+  const password = process.env.ADMIN_PASSWORD ?? "";
+  return Boolean(email && password);
 }
 
-function getConfiguredPassword(): string {
-  return process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? "";
+/** Vytvoří podepsaný session token (base64url JSON + HMAC-SHA256). */
+export function createSessionToken(email: string): string {
+  const secret = process.env.ADMIN_PASSWORD ?? "";
+  const payload = JSON.stringify({
+    email: email.trim(),
+    exp: Date.now() + SESSION_MS,
+  });
+  const encoded = Buffer.from(payload).toString("base64url");
+  const signature = crypto
+    .createHmac("sha256", secret)
+    .update(encoded)
+    .digest("base64url");
+  return `${encoded}.${signature}`;
 }
 
-export function isAdminLoginConfigured(): boolean {
-  return Boolean(getConfiguredAdminEmail() && getConfiguredPassword());
-}
+/** Ověří token. Vrací { email } nebo null. */
+export function verifySessionToken(token: string): { email: string } | null {
+  const secret = process.env.ADMIN_PASSWORD ?? "";
+  if (!secret) return null;
 
-export function tryAdminLogin(email: string, password: string): boolean {
-  const expectedEmail = getConfiguredAdminEmail().toLowerCase();
-  const expectedPassword = getConfiguredPassword();
-  if (!expectedEmail || !expectedPassword) return false;
-  const ok =
-    email.trim().toLowerCase() === expectedEmail && password === expectedPassword;
-  if (!ok || typeof window === "undefined") return ok;
-  window.sessionStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ exp: Date.now() + SESSION_MS, email: email.trim() }),
-  );
-  return true;
-}
+  const dot = token.indexOf(".");
+  if (dot < 1) return null;
 
-export function clearAdminSession(): void {
-  if (typeof window === "undefined") return;
-  window.sessionStorage.removeItem(STORAGE_KEY);
-}
+  const encoded = token.slice(0, dot);
+  const signature = token.slice(dot + 1);
+  if (!encoded || !signature) return null;
 
-export function hasValidAdminSession(): boolean {
-  if (typeof window === "undefined") return false;
-  const raw = window.sessionStorage.getItem(STORAGE_KEY);
-  if (!raw) return false;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(encoded)
+    .digest("base64url");
+  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+    return null;
+  }
+
   try {
-    const parsed = JSON.parse(raw) as { exp?: number };
-    if (typeof parsed.exp !== "number" || Date.now() > parsed.exp) {
-      window.sessionStorage.removeItem(STORAGE_KEY);
-      return false;
+    const payload = JSON.parse(
+      Buffer.from(encoded, "base64url").toString(),
+    ) as { email?: string; exp?: number };
+    if (
+      typeof payload.exp !== "number" ||
+      Date.now() > payload.exp ||
+      !payload.email
+    ) {
+      return null;
     }
-    return true;
+    return { email: payload.email };
   } catch {
-    window.sessionStorage.removeItem(STORAGE_KEY);
-    return false;
+    return null;
   }
 }

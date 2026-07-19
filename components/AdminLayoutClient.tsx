@@ -2,7 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { hasValidAdminSession, isAdminLoginConfigured } from "@/lib/admin-auth";
+
+type SessionState =
+  | "loading"
+  | "ok"
+  | "unauthorized"
+  | "not_configured";
 
 export default function AdminLayoutClient({
   children,
@@ -11,28 +16,56 @@ export default function AdminLayoutClient({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [ready, setReady] = useState(false);
+  const [state, setState] = useState<SessionState>("loading");
 
   const isLoginPath =
     pathname === "/admin/login" || pathname === "/admin/login/";
 
   useEffect(() => {
     if (isLoginPath) {
-      setReady(true);
+      setState("ok");
       return;
     }
-    if (!isAdminLoginConfigured()) {
-      router.replace("/");
-      return;
-    }
-    if (!hasValidAdminSession()) {
-      router.replace("/admin/login/");
-      return;
-    }
-    setReady(true);
-  }, [isLoginPath, pathname, router]);
 
-  if (!ready && !isLoginPath) {
+    let cancelled = false;
+
+    fetch("/api/admin/auth", { method: "GET" })
+      .then(async (res) => {
+        if (cancelled) return;
+        if (res.status === 200) {
+          const data = (await res.json()) as {
+            configured?: boolean;
+            authenticated?: boolean;
+          };
+          if (!data.configured) {
+            setState("not_configured");
+          } else if (data.authenticated) {
+            setState("ok");
+          } else {
+            setState("unauthorized");
+          }
+        } else {
+          setState("unauthorized");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setState("unauthorized");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoginPath, pathname]);
+
+  useEffect(() => {
+    if (state === "not_configured") {
+      router.replace("/");
+    } else if (state === "unauthorized" && !isLoginPath) {
+      router.replace("/admin/login/");
+    }
+  }, [state, isLoginPath, router]);
+
+  if (!isLoginPath && state !== "ok") {
     return (
       <div className="flex min-h-[50vh] items-center justify-center bg-stone-50 text-stone-600">
         Načítání…
