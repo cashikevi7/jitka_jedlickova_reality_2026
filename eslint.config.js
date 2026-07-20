@@ -47,6 +47,11 @@ export default [
         sessionStorage: "readonly",
         Node: "readonly",
         HTMLElement: "readonly",
+        // Node.js / Next.js server globals
+        Buffer: "readonly",
+        Request: "readonly",
+        Response: "readonly",
+        Headers: "readonly",
       },
     },
     rules: {

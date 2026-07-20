@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
   { href: "#uvod", label: "Úvod" },
@@ -19,21 +19,38 @@ const TEL_HREF = "tel:+420608713632";
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
-      <header className="site-header">
+      <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
         <div className="header-inner">
           <div className="header-left">
-            <Image src="/erb.svg" alt="Erb" className="erb" width={40} height={40} />
-            <a href="#uvod" className="home-link" onClick={() => setIsMobileOpen(false)}>
+            <Image
+              src="/erb.svg"
+              alt=""
+              className="header-logo"
+              width={36}
+              height={36}
+            />
+            <a
+              href="#uvod"
+              className="home-link"
+              onClick={() => setIsMobileOpen(false)}
+            >
               Jitka Jedličková
             </a>
           </div>
-          <div className="header-center">
-            <span className="brand-top">Reality</span>
-            <span className="brand-main">Jitka Jedličková</span>
-          </div>
+
           <div className="header-right">
             <button
               type="button"
@@ -42,10 +59,14 @@ export default function Navbar() {
               aria-expanded={isMobileOpen}
               onClick={() => setIsMobileOpen((o) => !o)}
             >
-              {isMobileOpen ? <X className="h-6 w-6" aria-hidden /> : <Menu className="h-6 w-6" aria-hidden />}
+              {isMobileOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              )}
             </button>
             <a href={TEL_HREF} className="call-button">
-              Zavolat&nbsp;608&nbsp;713&nbsp;632
+              +420&nbsp;608&nbsp;713&nbsp;632
             </a>
           </div>
         </div>
@@ -62,15 +83,28 @@ export default function Navbar() {
       </header>
 
       {isMobileOpen && (
-        <div className="header-mobile-overlay lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+        <div
+          className="header-mobile-overlay lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+        >
           <nav aria-label="Sekce stránky">
             {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setIsMobileOpen(false)}>
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileOpen(false)}
+              >
                 {link.label}
               </Link>
             ))}
-            <a href={TEL_HREF} className="call-button" onClick={() => setIsMobileOpen(false)}>
-              Zavolat&nbsp;608&nbsp;713&nbsp;632
+            <a
+              href={TEL_HREF}
+              className="call-button"
+              onClick={() => setIsMobileOpen(false)}
+            >
+              +420&nbsp;608&nbsp;713&nbsp;632
             </a>
           </nav>
         </div>

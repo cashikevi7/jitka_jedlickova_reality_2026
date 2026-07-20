@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Phone, Mail, MapPin, Facebook, Instagram, CheckCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 const JITKA_PHOTO = "/images/Jitka/jitka1.webp";
-const FORMSPREE_FORM_ID = "xeepeadb"; // Formspree form ID
+const FORMSPREE_FORM_ID = "xeepeadb";
 
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -19,13 +24,16 @@ export default function Contact() {
     const data = new FormData(form);
 
     try {
-      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
-        method: "POST",
-        body: data,
-        headers: {
-          "Accept": "application/json"
+      const response = await fetch(
+        `https://formspree.io/f/${FORMSPREE_FORM_ID}`,
+        {
+          method: "POST",
+          body: data,
+          headers: {
+            Accept: "application/json",
+          },
         }
-      });
+      );
 
       if (response.ok) {
         setIsSubmitted(true);
@@ -42,17 +50,27 @@ export default function Contact() {
 
   if (isSubmitted) {
     return (
-      <section id="kontakt" className="py-16 md:py-24" style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      }}>
+      <section
+        id="kontakt"
+        className="py-20 md:py-28"
+        style={{ background: "var(--color-sand)" }}
+      >
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center py-16">
-            <CheckCircle className="w-16 h-16 mx-auto mb-6 text-primary" />
-            <h2 className="text-2xl font-semibold text-white mb-4">Děkuji za zprávu!</h2>
-            <p className="text-white/70 mb-6">Ozvu se vám co nejdříve, obvykle do 24 hodin.</p>
+            <CheckCircle
+              className="w-16 h-16 mx-auto mb-6"
+              style={{ color: "var(--color-terracotta)" }}
+            />
+            <h2 className="text-2xl font-semibold mb-4" style={{ color: "var(--color-espresso)" }}>
+              Děkuji za zprávu!
+            </h2>
+            <p className="mb-6" style={{ color: "var(--color-muted)" }}>
+              Ozvu se vám co nejdříve, obvykle do 24 hodin.
+            </p>
             <button
               onClick={() => setIsSubmitted(false)}
-              className="text-primary hover:underline cursor-pointer"
+              className="font-medium cursor-pointer hover:underline"
+              style={{ color: "var(--color-terracotta)" }}
             >
               Odeslat další zprávu
             </button>
@@ -61,165 +79,188 @@ export default function Contact() {
       </section>
     );
   }
+
   return (
-    <section id="kontakt" className="py-16 md:py-24" style={{
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    }}>
-      <div className="container mx-auto px-4 max-w-4xl">
-        <h2 className="section-title mb-2" style={{ color: 'white' }}>Kontaktujte mě</h2>
-        <p className="section-lead mb-10" style={{ color: 'rgba(255,255,255,0.7)' }}>
-          Domluvte si nezávaznou konzultaci. Odpovím vám obvykle do 24 hodin.
+    <section
+      id="kontakt"
+      className="py-20 md:py-28"
+      style={{ background: "var(--color-sand)" }}
+    >
+      <div className="container mx-auto px-4 max-w-5xl">
+        <p className="section-label">Kontakt</p>
+        <h2 className="section-title mb-3">Domluvme si nezávaznou schůzku</h2>
+        <p
+          className="section-lead mb-14 max-w-xl"
+        >
+          Ráda vás poznám osobně — u kávy, u vás doma, nebo online. Jedna
+          osoba, jeden kontakt, žádné přepojování.
         </p>
 
-        <div 
-          className="p-8 rounded-2xl mb-10"
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-          }}
-        >
-          <div className="flex flex-col sm:flex-row gap-8 items-start">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden shrink-0" style={{
-              border: '3px solid #c9a227',
-              boxShadow: '0 8px 24px rgba(201, 162, 39, 0.3)',
-            }}>
+        <div className="grid md:grid-cols-5 gap-10 md:gap-16 items-start">
+          {/* Levá — portrét */}
+          <div className="md:col-span-2 flex flex-col items-center md:items-start">
+            <div
+              className="relative w-48 h-56 md:w-full md:aspect-3/4 rounded-2xl overflow-hidden"
+              style={{
+                boxShadow: "0 20px 50px -12px rgba(44, 36, 22, 0.2)",
+              }}
+            >
               <Image
                 src={JITKA_PHOTO}
                 alt="Jitka Jedličková"
                 fill
+                sizes="(max-width: 768px) 192px, 40vw"
                 className="object-cover"
               />
             </div>
-            <div className="flex-1">
-              <h3 className="text-white text-xl font-semibold mb-1">Jitka Jedličková</h3>
-              <p className="text-primary font-medium mb-4">Realitní makléřka</p>
-              <p className="text-white/70 text-sm mb-6">
-                Jedna osoba, jeden kontakt. Žádné přepojování. 
-                Ráda vám pomohu s prodejem, koupí i pronájmem nemovitostí.
-              </p>
-              
-              <div className="space-y-3">
-                <a
-                  href="tel:+420608713632"
-                  className="flex items-center gap-3 text-white hover:text-primary transition-colors duration-200 cursor-pointer"
-                >
-                  <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <span className="font-medium">+420 608 713 632</span>
-                </a>
-                <a
-                  href="mailto:jedlickova@reality-proradost.cz"
-                  className="flex items-center gap-3 text-white hover:text-primary transition-colors duration-200 cursor-pointer"
-                >
-                  <Mail className="w-5 h-5 text-primary shrink-0" />
-                  <span className="font-medium">jedlickova@reality-proradost.cz</span>
-                </a>
-                <div className="flex items-center gap-3 text-white/70">
-                  <MapPin className="w-5 h-5 text-primary shrink-0" />
-                  <span>Moravský Krumlov</span>
-                </div>
-              </div>
-              
-              <div className="flex gap-3 pt-4 mt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                <a
-                  href="https://facebook.com/profile.php?id=61562180164190"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="p-2.5 rounded-full border border-white/20 text-white hover:border-primary hover:text-primary transition-all duration-200 cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.05)' }}
-                >
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://instagram.com/jitkajedlickova6"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="p-2.5 rounded-full border border-white/20 text-white hover:border-primary hover:text-primary transition-all duration-200 cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.05)' }}
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
+
+            <div className="mt-6 space-y-3 text-center md:text-left">
+              <a
+                href="tel:+420608713632"
+                className="flex items-center gap-3 font-medium transition-colors cursor-pointer"
+                style={{ color: "var(--color-espresso)" }}
+              >
+                <Phone className="w-5 h-5 shrink-0" style={{ color: "var(--color-terracotta)" }} />
+                +420 608 713 632
+              </a>
+              <a
+                href="mailto:jedlickova@reality-proradost.cz"
+                className="flex items-center gap-3 font-medium transition-colors cursor-pointer"
+                style={{ color: "var(--color-espresso)" }}
+              >
+                <Mail className="w-5 h-5 shrink-0" style={{ color: "var(--color-terracotta)" }} />
+                jedlickova@reality-proradost.cz
+              </a>
+              <div
+                className="flex items-center gap-3"
+                style={{ color: "var(--color-muted)" }}
+              >
+                <MapPin className="w-5 h-5 shrink-0" style={{ color: "var(--color-terracotta)" }} />
+                Moravský Krumlov
               </div>
             </div>
+
+            <p
+              className="mt-6 text-sm italic leading-relaxed text-center md:text-left"
+              style={{ color: "var(--color-muted)" }}
+            >
+              „Odpovím do 24 hodin. A pokud to bude dřív, tím lépe — nemám ráda
+              čekání.“
+            </p>
+          </div>
+
+          {/* Pravá — formulář */}
+          <div className="md:col-span-3">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5 p-7 md:p-10 rounded-2xl"
+              style={{
+                background: "var(--color-warm-white)",
+                border: "1px solid var(--color-clay)",
+                boxShadow: "0 8px 32px rgba(44, 36, 22, 0.04)",
+              }}
+            >
+              <h3
+                className="font-heading text-lg font-semibold mb-2"
+                style={{ color: "var(--color-espresso)" }}
+              >
+                Napište mi
+              </h3>
+              <p className="text-sm mb-6" style={{ color: "var(--color-muted)" }}>
+                Stačí pár údajů a ozvu se vám.
+              </p>
+
+              <div>
+                <label
+                  htmlFor="contact-name"
+                  className="block text-sm font-medium mb-1.5"
+                  style={{ color: "var(--color-espresso)" }}
+                >
+                  Vaše křestní jméno
+                </label>
+                <input
+                  id="contact-name"
+                  name="name"
+                  type="text"
+                  required
+                  className="w-full px-4 py-3 rounded-lg border outline-none transition-colors"
+                  style={{
+                    borderColor: "var(--color-clay)",
+                    background: "var(--color-cream)",
+                    color: "var(--color-espresso)",
+                  }}
+                  placeholder="např. Jana"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="contact-email"
+                  className="block text-sm font-medium mb-1.5"
+                  style={{ color: "var(--color-espresso)" }}
+                >
+                  Telefon nebo e-mail
+                </label>
+                <input
+                  id="contact-email"
+                  name="email"
+                  type="text"
+                  required
+                  className="w-full px-4 py-3 rounded-lg border outline-none transition-colors"
+                  style={{
+                    borderColor: "var(--color-clay)",
+                    background: "var(--color-cream)",
+                    color: "var(--color-espresso)",
+                  }}
+                  placeholder="vas@email.cz nebo 777 123 456"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="contact-message"
+                  className="block text-sm font-medium mb-1.5"
+                  style={{ color: "var(--color-espresso)" }}
+                >
+                  S čím vám mohu pomoci?
+                </label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows={4}
+                  required
+                  className="w-full px-4 py-3 rounded-lg border outline-none resize-y min-h-[100px] transition-colors"
+                  style={{
+                    borderColor: "var(--color-clay)",
+                    background: "var(--color-cream)",
+                    color: "var(--color-espresso)",
+                  }}
+                  placeholder="Napište mi klidně jednou větou — prodej, pronájem, nebo odhad?"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 rounded-lg font-semibold cursor-pointer transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{
+                  background: "var(--color-terracotta)",
+                  color: "white",
+                  boxShadow: "0 4px 16px rgba(193, 127, 89, 0.25)",
+                }}
+              >
+                {isLoading ? "Odesílám..." : "Domluvit schůzku"}
+              </button>
+
+              <p
+                className="text-xs text-center"
+                style={{ color: "var(--color-muted-light)" }}
+              >
+                Odesláním souhlasíte se zpracováním osobních údajů.
+              </p>
+            </form>
           </div>
         </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 p-8 rounded-2xl"
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-          }}
-        >
-          <h3 className="text-white text-lg font-semibold mb-6">Napište mi zprávu</h3>
-          <div className="grid sm:grid-cols-2 gap-5">
-            <div>
-              <label
-                htmlFor="contact-name"
-                className="block text-sm font-medium text-white/80 mb-2"
-              >
-                Jméno a příjmení
-              </label>
-              <input
-                id="contact-name"
-                name="name"
-                type="text"
-                required
-                className="w-full px-4 py-3.5 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/40 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors duration-200"
-                placeholder="Vaše jméno"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="contact-email"
-                className="block text-sm font-medium text-white/80 mb-2"
-              >
-                E-mail
-              </label>
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                required
-                className="w-full px-4 py-3.5 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/40 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors duration-200"
-                placeholder="vas@email.cz"
-              />
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="contact-message"
-              className="block text-sm font-medium text-white/80 mb-2"
-            >
-              Zpráva
-            </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              rows={4}
-              required
-              className="w-full px-4 py-3.5 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/40 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y min-h-[120px] transition-colors duration-200"
-              placeholder="Napište, s čím vám mám pomoci..."
-            />
-          </div>
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full py-4 rounded-lg font-semibold text-dark cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: 'linear-gradient(135deg, #c9a227 0%, #e6b800 100%)',
-              boxShadow: '0 4px 16px rgba(201, 162, 39, 0.3)',
-            }}
-          >
-            {isLoading ? "Odesílám..." : "Odeslat zprávu"}
-          </button>
-        </form>
       </div>
     </section>
   );

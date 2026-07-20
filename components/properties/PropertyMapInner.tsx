@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useEffect, useRef } from "react";
 
-const GOLD = "#8f6b47";
-const GOLD_DARK = "#7a5a3a";
+const GOLD = "#C17F59";
+const GOLD_DARK = "#A86540";
 
 function createGoldIcon() {
   const svg = `

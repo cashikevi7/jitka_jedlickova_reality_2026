@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { Clock, Heart, MapPin, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 function AnimatedCounter({
   value,
@@ -38,53 +39,74 @@ function AnimatedCounter({
   return <>{display || valueStr}</>;
 }
 
-function Stat({
-  value,
-  label,
-  inView,
-  showDivider,
-}: {
-  value: string | number;
-  label: string;
-  inView: boolean;
-  showDivider?: boolean;
-}) {
-  return (
-    <>
-      {showDivider && (
-        <div className="hidden md:block w-px bg-primary/50 self-stretch min-h-[60px]" />
-      )}
-      <div className="text-center py-4">
-        <div className="font-heading text-3xl md:text-4xl lg:text-5xl text-primary font-medium">
-          <AnimatedCounter value={value} inView={inView} />
-        </div>
-        <p className="text-white/90 mt-2 text-sm md:text-base">{label}</p>
-      </div>
-    </>
-  );
-}
+const STATS = [
+  {
+    value: "12+",
+    label: "Let zkušeností",
+    sublabel: "na trhu od roku 2012",
+    icon: Clock,
+  },
+  {
+    value: "100+",
+    label: "Úspěšných obchodů",
+    sublabel: "spokojení klienti",
+    icon: Heart,
+  },
+  {
+    value: "Znojmo",
+    label: "Region",
+    sublabel: "Moravský Krumlov a okolí",
+    icon: MapPin,
+  },
+  {
+    value: "100%",
+    label: "Osobní přístup",
+    sublabel: "jeden kontakt, žádné přepojování",
+    icon: Users,
+  },
+];
 
 export default function Stats() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <motion.section
-      ref={ref}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="bg-[var(--color-dark-section)] py-12 md:py-16"
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-0">
-          <Stat value="10+" label="Nemovitostí v nabídce" inView={inView} showDivider={false} />
-          <Stat value="2012" label="Na trhu od roku" inView={inView} showDivider />
-          <Stat value="100%" label="Spokojených klientů" inView={inView} showDivider />
-          <Stat value="Znojmo" label="Region" inView={inView} showDivider />
-        </div>
+    <section ref={ref} className="py-16 md:py-20" style={{ background: "var(--color-sand)" }}>
+      <div className="container mx-auto px-4 max-w-5xl">
+        <p className="section-label text-center">Proč Jitka</p>
+        <h2 className="section-title text-center mb-3">
+          Zkušenosti, na které se můžete spolehnout
+        </h2>
+        <p className="section-lead text-center mb-12 max-w-xl mx-auto">
+          Každý obchod je pro mě příběh. Tady je pár čísel, která mluví za mě.
+        </p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
+        >
+          {STATS.map((stat) => (
+            <div key={stat.label} className="text-center group">
+              <stat.icon className="w-5 h-5 mx-auto mb-3" style={{ color: "var(--color-terracotta)" }} aria-hidden="true" />
+              <div
+                className="font-heading text-2xl md:text-3xl lg:text-4xl font-semibold mb-1"
+                style={{ color: "var(--color-espresso)" }}
+              >
+                <AnimatedCounter value={stat.value} inView={inView} />
+              </div>
+              <p className="text-sm font-medium" style={{ color: "var(--color-espresso)" }}>
+                {stat.label}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--color-muted)" }}>
+                {stat.sublabel}
+              </p>
+            </div>
+          ))}
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

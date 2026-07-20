@@ -1,7 +1,7 @@
 "use client";
 
+import { Check, Share2 } from "lucide-react";
 import { useState } from "react";
-import { Share2, Check } from "lucide-react";
 
 interface ShareButtonProps {
   readonly title: string;
@@ -55,7 +55,7 @@ export default function ShareButton({ title, text, className = "" }: ShareButton
     >
       {copied ? (
         <>
-          <Check className="w-4 h-4 text-primary" aria-hidden />
+          <Check className="w-4 h-4 text-primary" aria-hidden="true" />
           <span>Zkopírováno</span>
         </>
       ) : (

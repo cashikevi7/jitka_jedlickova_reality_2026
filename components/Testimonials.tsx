@@ -1,9 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
-/** Texty sjednocené s https://www.jitkajedlickova.cz/reference/ */
 const TESTIMONIALS = [
   {
     name: "Jitka Leikepová",
@@ -33,37 +31,69 @@ const TESTIMONIALS = [
 ];
 
 export default function Testimonials() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
   return (
-    <section id="reference" className="py-16 md:py-24 bg-background">
+    <section
+      id="reference"
+      className="py-20 md:py-28"
+      style={{ background: "var(--color-sand)" }}
+    >
       <div className="container mx-auto px-4 max-w-5xl">
-        <h2 className="section-title">Klienti o spolupráci s Jitkou</h2>
+        <p className="section-label">Reference</p>
+        <h2 className="section-title mb-2">Klienti o spolupráci s Jitkou</h2>
         <p className="section-lead mb-10">
-          Důvěra je v realitách všechno.
+          Důvěra je v realitách všechno. Tady je pár slov od lidí, kterým jsem
+          pomohla.
         </p>
 
         <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory scrollbar-none"
+          className="flex gap-5 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory"
           style={{ scrollbarWidth: "none" }}
           aria-label="Reference klientů"
         >
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}
-              className="shrink-0 w-[85vw] sm:w-[360px] snap-start card p-6"
+              className="shrink-0 w-[85vw] sm:w-[340px] snap-start card p-6 flex flex-col"
             >
+              {/* Hvězdy */}
+              <div className="flex gap-0.5 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-4 h-4"
+                    fill="var(--color-gold)"
+                    stroke="none"
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+
               <Quote
-                className="w-8 h-8 text-primary/40 mb-4"
+                className="w-8 h-8 mb-3 shrink-0"
+                style={{ color: "var(--color-terracotta)", opacity: 0.3 }}
                 strokeWidth={1}
-                aria-hidden
+                aria-hidden="true"
               />
-              <p className="text-dark leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
-              <p className="font-heading text-primary text-sm font-semibold">
-                {t.name}
+              <p
+                className="leading-relaxed mb-5 flex-1"
+                style={{ color: "var(--color-espresso)" }}
+              >
+                &ldquo;{t.text}&rdquo;
               </p>
-              <p className="text-muted text-xs mt-0.5">{t.dealType}</p>
+              <div>
+                <p
+                  className="font-heading text-sm font-semibold"
+                  style={{ color: "var(--color-terracotta)" }}
+                >
+                  {t.name}
+                </p>
+                <p
+                  className="text-xs mt-0.5"
+                  style={{ color: "var(--color-muted)" }}
+                >
+                  {t.dealType}
+                </p>
+              </div>
             </div>
           ))}
         </div>

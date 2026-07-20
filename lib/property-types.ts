@@ -28,4 +28,8 @@ export interface PropertyListing {
   virtualTour?: string;
   /** Odkaz na detail inzerátu u zprostředkovatele */
   sourceUrl?: string;
+  /** Emocionální jednořádkový popisek pro kartu a detail */
+  highlight?: string;
+  /** Osobní komentář makléřky – proč se jí nemovitost líbí */
+  personalNote?: string;
 }
