@@ -9,8 +9,8 @@ function isValidEmail(s: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
-  const formId = process.env.FORMSPREE_FORM_ID?.trim();
-  if (!formId || formId === "YOUR_FORMSPREE_ID") {
+  const formId = (process.env.FORMSPREE_FORM_ID ?? DEFAULT_FORMSPREE_FORM_ID).trim();
+  if (!formId) {
     return NextResponse.json(
       { error: "Odesílání poptávek není na serveru nastavené (FORMSPREE_FORM_ID)." },
       { status: 503 }
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
         email,
         phone: phone || "—",
         message,
+        source,
         _replyto: email,
         _subject:
           source === "contact"
