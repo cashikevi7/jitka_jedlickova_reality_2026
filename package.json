@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
-    "dev": "next dev -p 4180",
-    "dev:clean": "npm run clean && next dev -p 4180",
+    "dev": "node -r ./monkey-patch.cjs direct-dev.cjs",
+    "dev:clean": "npm run clean && node -r ./monkey-patch.cjs direct-dev.cjs",
     "build": "cross-env NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "next start -p 4180",
     "lint": "next lint",
