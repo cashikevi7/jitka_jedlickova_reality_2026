@@ -10,7 +10,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 const JITKA_PHOTO = "/images/Jitka/jitka1.webp";
-const FORMSPREE_FORM_ID = "xeepeadb";
 
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -24,22 +23,27 @@ export default function Contact() {
     const data = new FormData(form);
 
     try {
-      const response = await fetch(
-        `https://formspree.io/f/${FORMSPREE_FORM_ID}`,
-        {
-          method: "POST",
-          body: data,
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: String(data.get("name") ?? ""),
+          email: String(data.get("email") ?? ""),
+          phone: String(data.get("phone") ?? ""),
+          message: String(data.get("message") ?? ""),
+          _gotcha: String(data.get("_gotcha") ?? ""),
+          source: "contact",
+        }),
+      });
 
       if (response.ok) {
         setIsSubmitted(true);
         form.reset();
       } else {
-        alert("Došlo k chybě. Zkuste to znovu nebo mi zavolejte.");
+        const json = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        alert(json?.error ?? "Došlo k chybě. Zkuste to znovu nebo mi zavolejte.");
       }
     } catch {
       alert("Došlo k chybě. Zkuste to znovu nebo mi zavolejte.");
@@ -199,12 +203,12 @@ export default function Contact() {
                   className="block text-sm font-medium mb-1.5"
                   style={{ color: "var(--color-espresso)" }}
                 >
-                  Telefon nebo e-mail
+                  E-mail
                 </label>
                 <input
                   id="contact-email"
                   name="email"
-                  type="text"
+                  type="email"
                   required
                   className="w-full px-4 py-3 rounded-lg border outline-none transition-colors"
                   style={{
@@ -212,7 +216,29 @@ export default function Contact() {
                     background: "var(--color-cream)",
                     color: "var(--color-espresso)",
                   }}
-                  placeholder="vas@email.cz nebo 777 123 456"
+                  placeholder="vas@email.cz"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="contact-phone"
+                  className="block text-sm font-medium mb-1.5"
+                  style={{ color: "var(--color-espresso)" }}
+                >
+                  Telefon (nepovinné)
+                </label>
+                <input
+                  id="contact-phone"
+                  name="phone"
+                  type="tel"
+                  className="w-full px-4 py-3 rounded-lg border outline-none transition-colors"
+                  style={{
+                    borderColor: "var(--color-clay)",
+                    background: "var(--color-cream)",
+                    color: "var(--color-espresso)",
+                  }}
+                  placeholder="+420 777 123 456"
                 />
               </div>
 
@@ -236,6 +262,15 @@ export default function Contact() {
                     color: "var(--color-espresso)",
                   }}
                   placeholder="Napište mi klidně jednou větou — prodej, pronájem, nebo odhad?"
+                />
+              </div>
+
+              <div aria-hidden="true" style={{ position: "absolute", left: "-5000px" }}>
+                <input
+                  tabIndex={-1}
+                  name="_gotcha"
+                  type="text"
+                  autoComplete="off"
                 />
               </div>
 

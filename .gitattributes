@@ -1,0 +1,17 @@
+# Normalize line endings to LF for all text files.
+# This overrides `core.autocrlf=true` and keeps the working tree consistent
+# across Windows/macOS/Linux (important for Vercel builds).
+* text=auto eol=lf
+
+# Never attempt line-ending or whitespace normalization on binary files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary

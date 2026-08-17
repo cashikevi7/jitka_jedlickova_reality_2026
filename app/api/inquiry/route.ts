@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const MAX_MESSAGE = 8000;
 const MIN_MESSAGE = 15;
+const DEFAULT_FORMSPREE_FORM_ID = "xeepeadb";
 
 function isValidEmail(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
     const message = typeof body.message === "string" ? body.message.trim() : "";
     const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
     const phone = typeof body.phone === "string" ? body.phone.trim().slice(0, 40) : "";
+    const source = typeof body.source === "string" ? body.source.trim().slice(0, 80) : "";
     const honeypot = typeof body._gotcha === "string" ? body._gotcha.trim() : "";
 
     if (honeypot.length > 0) {
@@ -50,7 +52,10 @@ export async function POST(req: NextRequest) {
         phone: phone || "—",
         message,
         _replyto: email,
-        _subject: "Poptávka z AI chatu (web Jitka Jedličková)",
+        _subject:
+          source === "contact"
+            ? "Poptávka z kontaktního formuláře (web Jitka Jedličková)"
+            : "Poptávka z AI chatu (web Jitka Jedličková)",
       }),
     });
 
